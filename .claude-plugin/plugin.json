@@ -1,6 +1,6 @@
 {
   "name": "neckbeard",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Always-on coding standard: the least code that does the job, proven by a test that would catch it breaking.",
   "author": {
     "name": "Jesse English"

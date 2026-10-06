@@ -5,15 +5,17 @@ description: Use when reviewing a diff, branch, pull request or staged changes, 
 
 # neckbeard-review
 
-Review a diff the way neckbeard builds one: does it work, then is it the least code. One line per finding. The diff's best outcome is getting shorter. You list, you don't fix.
+Review a diff the way neckbeard builds one: what was asked, does it work, then is it the least code. One line per finding, grouped by how much it matters. The diff's best outcome is getting shorter. You list, you don't fix.
 
-## Pass 1: does it work?
+## First, the ask
 
-Walk the code the change touches with the inputs the data can really hold: empty, null, wrong type, missing keys, whitespace, duplicates, and every path that can crash. Stay inside the change. A bug that was already there gets one line, not a review.
+Read the ticket or issue the PR links before the diff. Its requirements are the spec. The PR description is the author's claim about meeting them, and it can quietly narrow a requirement, so check each requirement against the diff, not against the description. For every requirement and every claim, find the test that fails without the change; if there is none, say so. A requirement the diff doesn't meet, or meets only halfway, is the top finding.
 
-## Pass 2: is it the least code?
+## Then the diff
 
-Run the neckbeard questions and build rules against the diff. Look for:
+**Does it work?** Walk the code the change touches with the inputs the data can really hold: empty, null, wrong type, missing keys, whitespace, duplicates, and every path that can crash. Stay inside the change. A bug that was already there gets one line, not a review.
+
+**Is it the least code?** Run the neckbeard questions and build rules against the diff. Look for:
 
 - **Already existed.** A helper, fixture or pattern a few files over, or in the standard library, doing what the diff rewrote. Name the path or function.
 - **Layers nobody asked for.** An interface with one implementation, config nobody sets, a wrapper that only forwards a call, a guard for a case that can't happen, a check an earlier check already guarantees.
@@ -21,13 +23,18 @@ Run the neckbeard questions and build rules against the diff. Look for:
 - **Tests that don't test.** Still pass with the fix deleted, assert a mock's own return value, re-implement the thing they fake, or prove through two layers what one already proved.
 - **Comments that retell the ticket**, name people, or explain a decision instead of confusing code.
 
-A finding whose fix only adds code gets grilled like any other addition; if it doesn't earn its place in one sentence, it isn't a finding.
+## Findings
 
-## Format
+One finding per theme. A helper and the test that only exercises it are one finding. Two tests proving one thing are one finding. A finding whose fix only adds code gets grilled like any other addition; if it doesn't earn its place in one sentence, it isn't a finding.
 
-`<N>. <file>:L<line>: <what's wrong>. <what replaces it>.`
+Group by severity, most severe first, and keep the top group short enough to act on:
 
-Number across both passes so the author can say "fix 2 and 5".
+- **Critical.** Wrong behaviour, lost data, or a requirement not met. Always shown, never argued: the concrete input and the wrong result it gives, `input -> wrong result`.
+- **Important.** A claim with no test that fails without the change, or a safety net the diff removed.
+- **Minor.** The diff gets shorter: already existed, a layer nobody asked for, a refactor that rode along, a test that proves what's proven.
+- **Nit.** Wording, a comment, an impossible branch.
+
+Format: `<N>. <file>:L<line>: <what's wrong>. <what replaces it>.` Number across all groups so the author can say "fix 2 and 5".
 
 ❌ "This validator class might be more complex than necessary; have you considered whether all these rules are needed at this stage?"
 
