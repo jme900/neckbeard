@@ -41,9 +41,7 @@ Anything beyond the asked-for change has to earn its place in one sentence, whoe
 
 **Before handing back**, the agent re-reads its own diff. Every added line traces to the task or to a test that protects it; anything else comes out. You get the code, then at most three lines on what was skipped and when to add it.
 
-**Reviewing** (`/neckbeard-review`, or just ask for a review) runs two passes and numbers every finding so you can say "fix 2 and 5":
-1. **Does it work?** The ways it can crash and the inputs the data can really hold (empty, null, wrong type, missing keys, whitespace, duplicates).
-2. **Is it the least code?** The questions and rules above, run against the diff.
+**Reviewing** (`/neckbeard-review`, or just ask for a review) reads the ticket first, so a requirement the diff doesn't meet is the top finding, then checks whether the change works and whether it is the least code. Findings are one line each, one per theme, grouped Critical, Important, Minor, Nit, and numbered so you can say "fix 2 and 5".
 
 ## Before / after
 
