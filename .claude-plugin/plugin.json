@@ -1,0 +1,9 @@
+{
+  "name": "neckbeard",
+  "version": "1.0.0",
+  "description": "Always-on coding standard: the smallest change that fixes the problem, proven by a test that failed first.",
+  "author": {
+    "name": "Jesse English"
+  },
+  "hooks": "./hooks/hooks.json"
+}

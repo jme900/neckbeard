@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "neckbeard",
+  "description": "Always-on coding standard for Claude Code.",
+  "owner": {
+    "name": "Jesse English"
+  },
+  "plugins": [
+    {
+      "name": "neckbeard",
+      "description": "The smallest change that fixes the problem, proven by a test that failed first.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
