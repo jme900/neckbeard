@@ -9,7 +9,7 @@ The rules live in [skills/neckbeard/SKILL.md](skills/neckbeard/SKILL.md). A hook
 Needs Node on the PATH (Windows, macOS and Linux).
 
 ```
-/plugin marketplace add <owner>/neckbeard
+/plugin marketplace add jme900/neckbeard
 /plugin install neckbeard@neckbeard
 ```
 
