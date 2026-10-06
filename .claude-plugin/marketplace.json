@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "neckbeard",
-      "description": "The smallest change that fixes the problem, proven by a test that failed first.",
+      "description": "The least code that does the job, proven by a test that would catch it breaking.",
       "source": "./",
       "category": "productivity"
     }

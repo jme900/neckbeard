@@ -1,45 +1,49 @@
 # neckbeard
 
-A coding standard for Claude Code that is on in every session: **the smallest change that fixes the problem, proven by a test that failed first.**
+A coding standard for Claude Code that is on in every session: **the least code that does the job, proven by a test that would catch it breaking.**
 
-AI-written code drifts wordy and over-built. You get helpers nobody needed, tests that mock their way to green, and comments that retell the ticket. neckbeard keeps the agent close to how a careful senior developer works: read first, reuse what exists, write the test before the fix, change as little as possible, and say what was left out.
+AI-written code drifts wordy and over-built. You get helpers nobody needed, tests that mock their way to green, and comments that retell the ticket. neckbeard keeps the agent close to how a careful senior developer works: grill the task before writing, reuse what exists, change as little as possible, protect the places it can break, and say what was left out.
 
-## The prompt
+## The prompts
 
-neckbeard is one prompt: [`skills/neckbeard/SKILL.md`](skills/neckbeard/SKILL.md). The rest of this repo only loads that prompt into Claude Code.
+neckbeard is two prompts:
+
+- [`skills/neckbeard/SKILL.md`](skills/neckbeard/SKILL.md): the coding standard, injected into every session and every subagent.
+- [`skills/neckbeard-review/SKILL.md`](skills/neckbeard-review/SKILL.md): the review, loaded when you ask for one.
+
+The rest of this repo only loads those prompts into Claude Code.
 
 ## What it does
 
-**Before writing code**, the agent reads the code the change touches, then stops at the first rung that holds:
+**First, grill the task.** The agent reads the code the change touches and traces the real flow, then asks in order and stops at the first yes:
 
 ```
-1. Does it need to exist?          no: skip it, say so in one line
-2. Already in this codebase?       reuse it
-3. Stdlib or installed dependency? use it
-4. Only then:                      the minimum new code
+1. Does this need to exist?                        no: skip it, say so in one line
+2. Is it already here?                             reuse it
+3. Does the standard library or a dependency do it? use it
+4. Only then:                                      the least new code that does the job
 ```
 
-A bug fix, or a rule about the data, goes in the one place every caller routes through. Anything beyond the asked-for change has to clear rung 1 first, whoever suggested it.
+Anything beyond the asked-for change has to earn its place in one sentence, whoever suggested it. The agent says what it would drop and why before it builds.
 
-**Making a change:**
+**Then build it:**
 
-| Step | What it means |
+| Rule | What it means |
 |---|---|
-| Red | One small test per break point, run and seen failing before any production code |
-| Green, in place | Edit the existing code. A new function needs logic of its own; a wrapper that only forwards one call gets inlined |
-| Boundaries | Fake only external things (network, database, cloud, other processes). Never re-implement the fake, never bend production code to suit it |
-| Assert behaviour | A test that still passes with the fix deleted gets rewritten |
+| Fix it where every caller passes through | A bug fix or a rule about the data goes in the one function all callers route through |
+| Edit in place | A new function needs logic of its own; a wrapper that only forwards a call gets inlined |
+| No layers nobody asked for | No interface with one implementation, no config for a value that never changes, no scaffolding for later |
 | Readable over short | Plain loops and named variables beat dense one-liners |
-| Comments | Only where the code confuses. No tickets, people or history. A deliberate corner cut gets one line: `# neckbeard: global lock, per-account locks if throughput matters` |
-| Self-check | Every added line traces to a red test or to the task. Anything else is removed |
+| Comments only where the code confuses | No tickets, people or history. A corner cut on purpose gets one line: `# neckbeard: global lock, per-account locks if throughput matters` |
+| Keep every safety net | Checks on outside data, error handling that prevents data loss, security, anything you asked for |
 
-Never simplified away: input validation at trust boundaries, error handling that prevents data loss, security, and anything you explicitly asked for.
+**Tests protect the change.** One small test for each place the change can break, with the smallest data that breaks it. A test is real when it fails without the fix, fakes only what is outside the process, and asserts what the code produced rather than what a mock returned.
 
-**Reporting back**, each change comes with: the failing test output (red), the passing run (green), the diff, and at most three lines on what was skipped and when to add it.
+**Before handing back**, the agent re-reads its own diff. Every added line traces to the task or to a test that protects it; anything else comes out. You get the code, then at most three lines on what was skipped and when to add it.
 
-**Reviewing**, the agent runs two passes and numbers every comment so you can say "fix 2 and 5":
-1. **Works:** crash paths and the inputs the data can really hold (empty, null, wrong type, missing keys, whitespace, duplicates).
-2. **Simplest:** the rungs and the steps above.
+**Reviewing** (`/neckbeard-review`, or just ask for a review) runs two passes and numbers every finding so you can say "fix 2 and 5":
+1. **Does it work?** The ways it can crash and the inputs the data can really hold (empty, null, wrong type, missing keys, whitespace, duplicates).
+2. **Is it the least code?** The questions and rules above, run against the diff.
 
 ## Before / after
 
@@ -57,7 +61,7 @@ plus one test that runs a user without an email through the real loop, and fails
 
 ## How it works
 
-A `SessionStart` and a `SubagentStart` hook inject `SKILL.md` into every session and every subagent, so spawned agents follow it too. It is also a normal skill, so `/neckbeard` (or asking for "clean clear code", "TDD", "KISS style", "YAGNI") loads it on demand. It costs about 1.3k tokens of context per session and per subagent.
+A `SessionStart` and a `SubagentStart` hook inject the coding standard into every session and every subagent, so spawned agents follow it too. It is also a normal skill, so `/neckbeard` (or asking for "clean clear code", "KISS", "YAGNI", "80/20") loads it on demand. It costs about 1.4k tokens of context per session and per subagent. The review skill is not injected; it loads only when a review is asked for.
 
 Your repo's own conventions (contributor docs, test runner, linter, shared fixtures) always win over neckbeard.
 
@@ -82,7 +86,7 @@ Works on Windows, macOS and Linux.
 
 **3. Restart Claude Code.** Hooks load at startup.
 
-**4. Check it is on:** in a new session, ask "what coding rules are you following?" It should describe the rungs and the red/green steps. `/plugin` should list `neckbeard` as enabled.
+**4. Check it is on:** in a new session, ask "what coding rules are you following?" It should describe the four questions and the build rules. `/plugin` should list `neckbeard` as enabled.
 
 ### Moving from a manual install
 
@@ -94,7 +98,7 @@ If a machine already has neckbeard set up by hand, remove the old copy after ins
 
 ## Update
 
-Edit [`skills/neckbeard/SKILL.md`](skills/neckbeard/SKILL.md), bump `version` in [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json), and push. Then on each machine:
+Edit the prompt under [`skills/`](skills/), bump `version` in [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json), and push. Then on each machine:
 
 ```
 /plugin marketplace update neckbeard
