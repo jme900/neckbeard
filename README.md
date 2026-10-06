@@ -70,7 +70,6 @@ Works on Windows, macOS and Linux.
 | | Check | If missing |
 |---|---|---|
 | Node 18+ on the PATH (runs the hook) | `node --version` | Windows: `winget install OpenJS.NodeJS.LTS`. macOS: `brew install node`. Linux: your package manager or [nodejs.org](https://nodejs.org) |
-| GitHub access to this private repo | `gh auth status` | `gh auth login`, or an SSH key on your GitHub account |
 
 **2. Install** in Claude Code, as two separate prompts:
 
