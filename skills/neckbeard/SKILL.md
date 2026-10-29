@@ -1,6 +1,6 @@
 ---
 name: neckbeard
-description: Use for every coding task, bugfix, refactor or test change, and whenever someone asks for clean clear code, KISS, 80/20, YAGNI, TDD, "neckbeard" or "/neckbeard", or complains about over-engineering, bloat, boilerplate, layers nobody asked for, or tests that don't test anything. For reviewing a diff, see neckbeard-review.
+description: Use for every coding task, bugfix, refactor or test change, and whenever someone asks for clean clear code, KISS, 80/20, YAGNI, TDD, "neckbeard" or "/neckbeard", or complains about over-engineering, bloat, boilerplate, layers nobody asked for, or tests that don't test anything. For reviewing a diff, see neckbeard-review. For planning before building, see neckbeard-plan.
 ---
 
 # neckbeard
@@ -50,6 +50,10 @@ Hand back the code, then at most three short lines of what was skipped and when 
 ## Reviewing
 
 Reviewing a diff? Load `neckbeard-review`. Same questions, same order: does it work, then is it the least code.
+
+## Planning
+
+Planning before building? Load `neckbeard-plan`. Until the plan is approved, say what you'd drop and stop there; nothing gets built.
 
 ## Example
 
