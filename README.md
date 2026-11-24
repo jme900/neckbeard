@@ -15,6 +15,7 @@
 
 <p align="center">
   <a href="#install"><img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude_Code-plugin-D97757"></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2f8a55"></a>
   <a href=".claude-plugin/plugin.json"><img alt="Version 2.2.0" src="https://img.shields.io/badge/version-2.2.0-111111"></a>
   <img alt="Node 18 or newer" src="https://img.shields.io/badge/node-18%2B-339933">
   <img alt="Runs on macOS, Linux and Windows" src="https://img.shields.io/badge/macOS_%7C_Linux_%7C_Windows-supported-555">
@@ -127,3 +128,7 @@ claude plugin disable neckbeard@neckbeard
 ```
 
 `claude plugin enable neckbeard@neckbeard` turns it back on, and `claude plugin uninstall neckbeard@neckbeard` removes it.
+
+## License
+
+[MIT](LICENSE)
