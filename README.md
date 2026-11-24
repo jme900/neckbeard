@@ -1,8 +1,54 @@
-# neckbeard
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/logo-light.svg">
+    <img alt="neckbeard logo: a pixel-art senior dev with a hat, glasses and a neckbeard" src="docs/logo-light.svg" width="220">
+  </picture>
+</p>
 
-A coding standard for Claude Code that is on in every session: **the least code that does the job, proven by a test that would catch it breaking.**
+<h1 align="center">neckbeard</h1>
+
+<p align="center">
+  <b>The least code that does the job, proven by a test that would catch it breaking.</b><br>
+  An always-on coding standard for Claude Code.
+</p>
+
+<p align="center">
+  <a href="#install"><img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude_Code-plugin-D97757"></a>
+  <a href=".claude-plugin/plugin.json"><img alt="Version 2.2.0" src="https://img.shields.io/badge/version-2.2.0-111111"></a>
+  <img alt="Node 18 or newer" src="https://img.shields.io/badge/node-18%2B-339933">
+  <img alt="Runs on macOS, Linux and Windows" src="https://img.shields.io/badge/macOS_%7C_Linux_%7C_Windows-supported-555">
+</p>
+
+<p align="center">
+  <a href="#install">Install</a> ·
+  <a href="#what-it-does">What it does</a> ·
+  <a href="#before--after">Before / after</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#update">Update</a>
+</p>
+
+---
+
+You know the type. Has maintained every over-built codebase in the building and been paged for each one. You show them a `RecipientFilter` base class with a factory and a config flag; they delete it and write three lines inside the loop that was already there.
+
+neckbeard puts that senior dev inside Claude Code, in every session and every subagent.
 
 AI-written code drifts wordy and over-built. You get helpers nobody needed, tests that mock their way to green, and comments that retell the ticket. neckbeard keeps the agent close to how a careful senior developer works: grill the task before writing, reuse what exists, change as little as possible, protect the places it can break, and say what was left out.
+
+## Install
+
+Works on Windows, macOS and Linux. Needs Node 18+ to run the hook: check with `node --version`, or install it with `winget install OpenJS.NodeJS.LTS` (Windows), `brew install node` (macOS) or your package manager (Linux).
+
+1. Open a terminal (PowerShell, Terminal or any shell) and run the commands below. If it says `claude` isn't found, you only have the VS Code extension, which doesn't add the command to your terminal. Install it first with `npm install -g @anthropic-ai/claude-code`.
+
+   ```
+   claude plugin marketplace add jme900/neckbeard
+   claude plugin install neckbeard@neckbeard
+   ```
+
+2. Restart Claude Code (in VS Code, reload the window). Hooks load at startup.
+3. In a new session, ask "what coding rules are you following?" It should describe the four questions and the build rules.
 
 ## The prompts
 
@@ -66,51 +112,18 @@ A `SessionStart` and a `SubagentStart` hook inject the coding standard into ever
 
 Your repo's own conventions (contributor docs, test runner, linter, shared fixtures) always win over neckbeard.
 
-## Install
-
-Works on Windows, macOS and Linux.
-
-**1. Prerequisites**
-
-| | Check | If missing |
-|---|---|---|
-| Node 18+ on the PATH (runs the hook) | `node --version` | Windows: `winget install OpenJS.NodeJS.LTS`. macOS: `brew install node`. Linux: your package manager or [nodejs.org](https://nodejs.org) |
-
-**2. Install** in Claude Code, as two separate prompts:
-
-```
-/plugin marketplace add jme900/neckbeard
-```
-```
-/plugin install neckbeard@neckbeard
-```
-
-**3. Restart Claude Code.** Hooks load at startup.
-
-**4. Check it is on:** in a new session, ask "what coding rules are you following?" It should describe the four questions and the build rules. `/plugin` should list `neckbeard` as enabled.
-
-### Moving from a manual install
-
-If a machine already has neckbeard set up by hand, remove the old copy after installing the plugin, or the rules get injected twice:
-
-- `~/.claude/skills/neckbeard/`
-- `~/.claude/hooks/neckbeard_context.py`
-- the two `neckbeard_context.py` entries under `SessionStart` and `SubagentStart` in `~/.claude/settings.json`
-
 ## Update
 
-Edit the prompt under [`skills/`](skills/), bump `version` in [`.claude-plugin/plugin.json`](.claude-plugin/plugin.json), and push. Then on each machine:
-
 ```
-/plugin marketplace update neckbeard
+claude plugin marketplace update neckbeard
 ```
 
-and restart Claude Code.
+Then restart Claude Code.
 
 ## Turn it off
 
 ```
-/plugin disable neckbeard@neckbeard
+claude plugin disable neckbeard@neckbeard
 ```
 
-`/plugin enable neckbeard@neckbeard` turns it back on, and `/plugin uninstall neckbeard@neckbeard` removes it.
+`claude plugin enable neckbeard@neckbeard` turns it back on, and `claude plugin uninstall neckbeard@neckbeard` removes it.
