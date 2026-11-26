@@ -16,7 +16,7 @@
 <p align="center">
   <a href="#install"><img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude_Code-plugin-D97757"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-2f8a55"></a>
-  <a href=".claude-plugin/plugin.json"><img alt="Version 2.2.1" src="https://img.shields.io/badge/version-2.2.1-111111"></a>
+  <a href=".claude-plugin/plugin.json"><img alt="Version 2.3.0" src="https://img.shields.io/badge/version-2.3.0-111111"></a>
   <img alt="Node 18 or newer" src="https://img.shields.io/badge/node-18%2B-339933">
   <img alt="Runs on macOS, Linux and Windows" src="https://img.shields.io/badge/macOS_%7C_Linux_%7C_Windows-supported-555">
 </p>
@@ -53,11 +53,12 @@ Works on Windows, macOS and Linux. Needs Node 18+ to run the hook: check with `n
 
 ## The prompts
 
-neckbeard is three prompts:
+neckbeard is four prompts:
 
 - [`skills/neckbeard/SKILL.md`](skills/neckbeard/SKILL.md): the coding standard, injected into every session and every subagent.
 - [`skills/neckbeard-review/SKILL.md`](skills/neckbeard-review/SKILL.md): the review, loaded when you ask for one.
 - [`skills/neckbeard-plan/SKILL.md`](skills/neckbeard-plan/SKILL.md): planning, loaded when you start planning.
+- [`skills/neckbeard-teamwork/SKILL.md`](skills/neckbeard-teamwork/SKILL.md): a team of agents that builds and reviews, loaded when you ask for one.
 
 The rest of this repo only loads those prompts into Claude Code.
 
@@ -93,6 +94,8 @@ Anything beyond the asked-for change has to earn its place in one sentence, whoe
 
 **Planning** (`/neckbeard-plan`, or just say you're planning) runs like a team meeting instead of a monologue. It goes from broad to narrow in five stages: ideas, alignment, rough plan, detail, approval. The agent proposes each move to the next stage and only moves when you agree. It gives its honest verdict on your idea before building on it, asks one question per reply, uses plain words, and changes only what you correct. Every decision goes into notes on a shareable page, or a markdown file outside the repo when it can't publish one. Nothing gets built until you approve the plan.
 
+**Teamwork** (`/neckbeard-teamwork`, or "implement and review this with neckbeard") runs a small team. The main session plans the units of work and briefs one builder agent per ticket, running them one after another, or in parallel worktrees when they share no files. It verifies each builder's work itself before moving on. A fresh reviewer that saw none of the building runs neckbeard-review. Every finding is checked against the code and pushed back on unless it holds up. Only the real ones get fixed, folded into their ticket's commit, and confirmed by the reviewer. Then it stops and reports what was built, what the review found, and what was argued.
+
 ## Before / after
 
 You ask the agent to stop emailing users who have no address on file. Without neckbeard it adds a `RecipientFilter` base class, one subclass, a factory function, a config flag to turn the check off, and a test that mocks the filter to return `True` and then asserts `True`.
@@ -109,7 +112,7 @@ plus one test that runs a user without an email through the real loop, and fails
 
 ## How it works
 
-A `SessionStart` and a `SubagentStart` hook inject the coding standard into every session and every subagent, so spawned agents follow it too. It is also a normal skill, so `/neckbeard` (or asking for "clean clear code", "KISS", "YAGNI", "80/20") loads it on demand. It costs about 1.4k tokens of context per session and per subagent. The review and planning skills are not injected; each loads only when asked for.
+A `SessionStart` and a `SubagentStart` hook inject the coding standard into every session and every subagent, so spawned agents follow it too. It is also a normal skill, so `/neckbeard` (or asking for "clean clear code", "KISS", "YAGNI", "80/20") loads it on demand. It costs about 1.4k tokens of context per session and per subagent. The review, planning and teamwork skills are not injected; each loads only when asked for.
 
 Your repo's own conventions (contributor docs, test runner, linter, shared fixtures) always win over neckbeard.
 
